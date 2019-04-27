@@ -22,23 +22,45 @@ public class stegMain {
 		}catch(IOException e){
 			System.out.println("Improper file type");
 		}
+		int widthGuest = imgGuest.getWidth(null);
+		int widthHost = imgHost.getWidth(null);
+		int heightGuest = imgGuest.getHeight(null);
+		int heightHost = imgHost.getHeight(null);
+		int sizeGuest = widthGuest * heightGuest;
+		int sizeHost = widthHost * heightHost;
 		
-		int sizeGuest = imgGuest.getWidth(null) * imgGuest.getHeight(null);
-		int sizeHost = imgHost.getWidth(null) * imgHost.getHeight(null);
+		//3D array that will hold the RGB values of the guest image for each pixel.
+		//first array is the i location, the second array is the j location, and the
+		//third array is the RGB values in binary.
+		String[][][] rgbGuestArr = new String[widthGuest][heightGuest][2];
 		
+		//Checks that the size of the host is big enough to map guest to it
 		if((sizeHost) >= (8 * sizeGuest)) {
-			int pix = ((BufferedImage) imgGuest).getRGB(0, 0);
-			int a = (pix>>24) & 0xff;
-			int r = (pix>>16) & 0xff;
-			int g = (pix>>8) & 0xff;
-			int b = (pix>>0) & 0xff;
-			System.out.println(r + " " + g + " " + b);
-			//BufferedImage image = (BufferedImage) imgGuest;
-			//ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			//ImageIO.write(image, "png", outputStream);
-			//byte[] guestArray = outputStream.toByteArray();
-			//System.out.println("array " + guestArray);
-			//System.out.println(image);
+			
+			//nested loop iterates through each pixel of the image from left to right
+			//then top to bottom.
+			for(int i = 0; i < heightGuest; i++) {
+				for(int j = 0; j < widthGuest; j++) {
+					
+					//saves the pixel RGB value at location (j, i)
+					int pix = ((BufferedImage) imgGuest).getRGB(j, i);
+					//converts the compressed ARGB value to readable values from 0-256
+					//int a = (pix>>24) & 0xff;
+					int r = (pix>>16) & 0xff;
+					int g = (pix>>8) & 0xff;
+					int b = (pix>>0) & 0xff;
+					
+					String binR = Integer.toBinaryString(r);
+					String binG = Integer.toBinaryString(g);
+					String binB = Integer.toBinaryString(b);
+					
+					/*rgbGuestArr[j][i][0] = binR;
+					rgbGuestArr[j][i][1] = binG;
+					rgbGuestArr[j][i][2] = binB;*/
+					
+					System.out.printf("%dx%d -- R:%s, G:%s, B:%s\n", i, j, binR, binG, binB);
+				}
+			}
 
 			
 		}else if((sizeHost) < (8 * sizeGuest)) {
