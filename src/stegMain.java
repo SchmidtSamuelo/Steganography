@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -7,18 +8,39 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class stegMain {
+	
+	public static void main(String[] args) {
+		try {
+			encrypt();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	public static void saveImage(BufferedImage img, String imgName) {
+		try {
+			ImageIO.write(img, "png", new File(imgName));
+		} catch (IOException e) {
+        	System.out.println(e);
+		}
+	}
 
-	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		Image imgHost = null;
-		Image imgGuest = null;
+	public static BufferedImage encrypt(/*String pathGuest, String pathHost*/) throws IOException {
+		BufferedImage encryptedImg = null;
+		BufferedImage imgHost = null;
+		BufferedImage imgGuest = null;
 		
-		File pathGuest = new File("C:/Users/Sam/Documents/GitHub/Guest.png");
-		File pathHost = new File("C:/Users/Sam/Documents/GitHub/Host.png");
+		String pathGuest = "C:/Users/Sam/Documents/GitHub/Guest.png";
+		String pathHost = "C:/Users/Sam/Documents/GitHub/Host.png";
 		
 		try {
-			imgHost = ImageIO.read(pathHost);
-			imgGuest = ImageIO.read(pathGuest);
+			imgHost = ImageIO.read(new File(pathHost));
+			imgGuest = ImageIO.read(new File(pathGuest));
+			
+			System.out.println("duplicating host");
+			encryptedImg = imgHost;
+			System.out.println("host duplicated");
+			
 		}catch(IOException e){
 			System.out.println("Improper file type");
 		}
@@ -28,37 +50,37 @@ public class stegMain {
 		int heightHost = imgHost.getHeight(null);
 		int sizeGuest = widthGuest * heightGuest;
 		int sizeHost = widthHost * heightHost;
+		int hostx, hosty;
 		
-		//3D array that will hold the RGB values of the guest image for each pixel.
-		//first array is the i location, the second array is the j location, and the
-		//third array is the RGB values in binary.
-		String[][][] rgbGuestArr = new String[widthGuest][heightGuest][2];
 		
 		//Checks that the size of the host is big enough to map guest to it
 		if((sizeHost) >= (8 * sizeGuest)) {
-			
+			System.out.println("Compatable images detected");
 			//nested loop iterates through each pixel of the image from left to right
 			//then top to bottom.
 			for(int i = 0; i < heightGuest; i++) {
 				for(int j = 0; j < widthGuest; j++) {
 					
+					//placeholder for host values while LFSR is not present.
+					hostx = j;
+					hosty = i;
 					//saves the pixel RGB value at location (j, i)
-					int pix = ((BufferedImage) imgGuest).getRGB(j, i);
-					//converts the compressed ARGB value to readable values from 0-256
-					//int a = (pix>>24) & 0xff;
-					int r = (pix>>16) & 0xff;
-					int g = (pix>>8) & 0xff;
-					int b = (pix>>0) & 0xff;
+					int guestPix = imgGuest.getRGB(j, i);
+					int hostPix = imgHost.getRGB(hostx, hosty);
 					
-					String binR = Integer.toBinaryString(r);
-					String binG = Integer.toBinaryString(g);
-					String binB = Integer.toBinaryString(b);
+					//converts the compressed RGB value to readable values from 0-256
+					//int a = (pix>>24) & 0xff; //This is the alpha channel which isn't needed
+					int guestR = (guestPix>>16) & 0xff;
+					int guestG = (guestPix>>8) & 0xff;
+					int guestB = (guestPix>>0) & 0xff;
 					
-					/*rgbGuestArr[j][i][0] = binR;
-					rgbGuestArr[j][i][1] = binG;
-					rgbGuestArr[j][i][2] = binB;*/
+					int hostR = (hostPix>>16) & 0xff;
+					int hostG = (hostPix>>8) & 0xff;
+					int hostB = (hostPix>>0) & 0xff;
+
+					encryptedImg.setRGB(hostx, hosty, new Color(hostR, hostG, hostB).getRGB());
 					
-					System.out.printf("%dx%d -- R:%s, G:%s, B:%s\n", i, j, binR, binG, binB);
+					System.out.printf("%dx%d -- R:%s, G:%s, B:%s\n", i, j, guestR, guestG, guestB);
 				}
 			}
 
@@ -66,8 +88,7 @@ public class stegMain {
 		}else if((sizeHost) < (8 * sizeGuest)) {
 			System.out.println("The host file is too small to accomodate the guest file");
 		}
-		
-		System.exit(0);
+		saveImage(encryptedImg, "encrypted_image.png");
+		return encryptedImg;
 	}
-		
 }
