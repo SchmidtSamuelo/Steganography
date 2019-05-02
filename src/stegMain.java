@@ -25,6 +25,11 @@ public class stegMain {
 			e.printStackTrace();
 		}		
 	}
+	
+	public static void lfsr() {
+		//Insert LFSR here, might need a new class.
+	}
+	
 	public static void saveImage(BufferedImage img, String imgName) {
 		try {
 			ImageIO.write(img, "png", new File(imgName));
