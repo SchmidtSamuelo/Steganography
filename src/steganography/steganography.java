@@ -1,5 +1,8 @@
 package steganography;
-
+/**
+*
+* @author Schmidt
+*/
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
