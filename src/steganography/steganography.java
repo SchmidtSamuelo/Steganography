@@ -1,6 +1,5 @@
 package steganography;
 /**
-*
 * @author Schmidt
 */
 import java.awt.Color;
