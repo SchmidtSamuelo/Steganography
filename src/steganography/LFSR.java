@@ -8,17 +8,17 @@ package steganography;
  *
  * @author stRa222Vi2277
  */
- public final class LFSRC {
+ public final class LFSR {
     private static final int M = 24;
     // hard-coded for 32-bits
     private static final int[] TAPS = {1, 2, 8, 24}; 
     private final boolean[] bits = new boolean[M + 1];
-    public LFSRC(int seed) {
+    public LFSR(int seed) {
         for(int i = 0; i < M; i++) {
             bits[i] = (((1 << i) & seed) >>> i) == 1;
         }
     } 
-    public LFSRC() {
+    public LFSR() {
         this((int)System.currentTimeMillis());
     }
     /* generate a random int uniformly on the interval [-2^31 + 1, 2^31 - 1] */

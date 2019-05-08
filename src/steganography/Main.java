@@ -8,11 +8,11 @@ package steganography;
  *
  * @author stRa222Vi2277
  */
-public class Lfsr {
+public class Main {
     public static void main(String[] args) {
-        stegMain stg = new stegMain();
+        steganography stg = new steganography();
         
-        LFSRC rng = new LFSRC();
+        LFSR rng = new LFSR();
 		for (int i = 1; i <= 16; i++) {
 			int next = rng.nextInt();
 			System.out.println(next);
