@@ -14,6 +14,9 @@ public class Main {
          * Decrypt takes the following arguments (original_guest_image_width, original_guest_image_height, encrypted_image_path)
          * the encrypted image is always saved as "encrypted_image" in the same directory as the program, so it can be chosen
          * with just "encrypted_image.png"
+         * 
+         * To make it simple, rename the guest image to "Guest.png" and rename the host image to "Host.png"
+         * place both images in the "Steganography" folder with the README.md file in it.
          */
         steganography.encrypt("Guest.png", "Host.png");
         steganography.decrypt(10, 10, "encrypted_image.png");
