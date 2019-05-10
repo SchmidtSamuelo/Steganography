@@ -1,22 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * NOTE: THIS PROGRAM WILL NOT WORK WITH jpg or jpeg FILES DUE TO THEIR INHERENT
+ * COMPRESSION, ANY BITS CHANGED WILL BE OVERWRITTEN BY THE jpg or jpeg's
+ * LOSSY COMPRESSION ALGORYTHM
  */
 package steganography;
-/**
- *
- * @author stRa222Vi2277
- */
+
 public class Main {
+
     public static void main(String[] args) {
-        steganography stg = new steganography();
-        
-        LFSR rng = new LFSR();
-		for (int i = 1; i <= 16; i++) {
-			int next = rng.nextInt();
-			System.out.println(next);
+    	
+        /*
+         * Encrypt takes the following arguments (guest_image_path, host_image_path)
+         * Decrypt takes the following arguments (original_guest_image_width, original_guest_image_height, encrypted_image_path)
+         */
+        steganography.encrypt("", "");
+        steganography.decrypt(10, 10, "");
     }
     
-}
 }
