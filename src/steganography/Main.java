@@ -12,9 +12,11 @@ public class Main {
         /*
          * Encrypt takes the following arguments (guest_image_path, host_image_path)
          * Decrypt takes the following arguments (original_guest_image_width, original_guest_image_height, encrypted_image_path)
+         * the encrypted image is always saved as "encrypted_image" in the same directory as the program, so it can be chosen
+         * with just "encrypted_image.png"
          */
-        steganography.encrypt("", "");
-        steganography.decrypt(10, 10, "");
+        steganography.encrypt("Guest.png", "Host.png");
+        steganography.decrypt(10, 10, "encrypted_image.png");
     }
     
 }
