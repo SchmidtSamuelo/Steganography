@@ -33,6 +33,7 @@ public class stegMain {
 	public static void saveImage(BufferedImage img, String imgName) {
 		try {
 			ImageIO.write(img, "png", new File(imgName));
+			System.out.println("saving Image...");
 		} catch (IOException e) {
         	System.out.println(e);
 		}
@@ -66,8 +67,7 @@ public class stegMain {
 		
 		int sizeGuest = widthGuest * heightGuest;
 		int sizeHost = widthHost * heightHost;
-		int hostx, hosty;
-		
+		int hostx, hosty;		
 		
 		//Checks that the size of the host is big enough to map guest to it
 		if((sizeHost) >= (8 * sizeGuest)) {
@@ -96,7 +96,7 @@ public class stegMain {
 
 					encryptedImg.setRGB(hostx, hosty, new Color(hostR, hostG, hostB).getRGB());
 					
-					System.out.printf("%dx%d -- R:%s, G:%s, B:%s\n", i, j, guestR, guestG, guestB);
+					//System.out.printf("%dx%d -- R:%s, G:%s, B:%s\n", i, j, guestR, guestG, guestB);
 				}
 			}
 
@@ -108,42 +108,51 @@ public class stegMain {
 		return encryptedImg;
 	}
 	public static BufferedImage decrypt(int width, int height, String pathEncrypted) { //width and height are the dimensions of the original guest image
-		BufferedImage imgEncrypted = null;
+		//width = width - 1;
+		//height = height -1;
+		
+		BufferedImage encryptedImg = null;
 		BufferedImage decryptedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		//System.out.printf("%dx%d\n", decryptedImg.getWidth(), decryptedImg.getHeight());
 		
 		//remove the below line when implemented
 		pathEncrypted = "C:/Users/Sam/Documents/GitHub/encrypted_image.png";
 		
 		//Checks if the file is an image, throws an error if the filetype isn't
 		try {
-			imgEncrypted = ImageIO.read(new File(pathEncrypted));			
+			encryptedImg = ImageIO.read(new File(pathEncrypted));			
 		}catch(IOException e){
 			System.out.println("Improper file type");
 		}
 		
-		int widthEncrypted = imgEncrypted.getWidth(null);
-		int heightEncrypted = imgEncrypted.getHeight(null);
+		int widthEncrypted = encryptedImg.getWidth(null);
+		int heightEncrypted = encryptedImg.getHeight(null);
+		int widthDecrypted = decryptedImg.getWidth(null);
+		int heightDecrypted = decryptedImg.getHeight(null);
+		//System.out.printf("%dx%d\n", widthEncrypted, heightEncrypted);
 		
 		//int sizeEncrypted = widthEncrypted * heightEncrypted; //not needed, copy/pasted from encrypt.
 		
 		int encryptedx, encryptedy;
-		for(int i = 0; i < heightEncrypted; i++) {
-			for(int j = 0; j < widthEncrypted; j++) {
+		for(int i = 0; i < heightDecrypted; i++) {
+			for(int j = 0; j < widthDecrypted; j++) {
 				
 				//placeholder for encrypted values while LFSR is not present.
 				encryptedx = j;
 				encryptedy = i;
 				
-				int encryptedPix = imgEncrypted.getRGB(encryptedx, encryptedy);
+				int encryptedPix = encryptedImg.getRGB(encryptedx, encryptedy);
 				
 				int encryptedR = (encryptedPix>>16) & 0xff;
 				int encryptedG = (encryptedPix>>8) & 0xff;
 				int encryptedB = (encryptedPix>>0) & 0xff;
 				
 				decryptedImg.setRGB(encryptedx, encryptedy, new Color(encryptedR, encryptedG, encryptedB).getRGB());
+				System.out.printf("saving pixel %dx%d\n", i, j);
 			}
 		}
 		
+		System.out.println("Saving the decrypted image");
 		saveImage(decryptedImg, "decrypted_image.png");
 		return decryptedImg;
 	}
